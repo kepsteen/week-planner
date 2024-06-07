@@ -1,12 +1,20 @@
-.row {
-  display: flex;
-  flex-wrap: wrap;
-}
-
 tr:nth-child(odd) {
   background-color: #333;
 }
 
 tr:nth-child(even) {
   background-color: #fff;
+}
+
+select,
+textarea {
+  display: block;
+}
+
+#cancel {
+  color: white;
+  background-color: grey;
+  border-radius: 5px;
+  text-decoration: none;
+  padding: 4px;
 }
