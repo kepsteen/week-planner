@@ -1,12 +1,15 @@
 var $modal = document.querySelector('dialog');
 var $addNewBtn = document.querySelector('#add-new');
 var $form = document.querySelector('#modal-form');
+var $table = document.querySelector('#events-table');
 if (!$modal)
     throw new Error('no dialog found');
 if (!$addNewBtn)
     throw new Error('no add new button');
 if (!$form)
     throw new Error('no form');
+if (!$table)
+    throw new Error('no table');
 $addNewBtn.addEventListener('click', function () {
     $modal.showModal();
 });
@@ -19,16 +22,13 @@ function renderResult(item) {
     </tr>
   
     */
-    var $outerElement = document.createElement('tr');
-    var $tdElement1 = document.createElement('td');
-    var $tdElement2 = document.createElement('td');
-    var $tdElement3 = document.createElement('td');
-    $tdElement1.textContent = item.time;
-    $tdElement2.textContent = item.day;
-    $tdElement3.textContent = item.notes;
-    $outerElement.appendChild($tdElement1);
-    $outerElement.appendChild($tdElement2);
-    $outerElement.appendChild($tdElement3);
+    var newRow = $table.insertRow(-1);
+    var newCell1 = newRow.insertCell(0);
+    var newCell2 = newRow.insertCell(1);
+    var newCell3 = newRow.insertCell(2);
+    newCell1.appendChild(document.createTextNode(item.time));
+    newCell2.appendChild(document.createTextNode(item.day));
+    newCell3.appendChild(document.createTextNode(item.notes));
 }
 $form.addEventListener('submit', function () {
     // 1. collect the values from the form with the elements property
@@ -38,6 +38,6 @@ $form.addEventListener('submit', function () {
     var item = {
         time: $formElements.timeDropdown.value,
         day: $formElements.weekDropdown.value,
-        notes: $formElements.notesInput.value
+        notes: $formElements.notesInput.value,
     };
 });

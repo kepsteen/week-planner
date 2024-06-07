@@ -4,7 +4,7 @@ interface Item {
   notes: string;
 }
 
-interface FormElements extends HTMLFormControlsCollection{
+interface FormElements extends HTMLFormControlsCollection {
   timeDropdown: HTMLSelectElement;
   weekDropdown: HTMLSelectElement;
   notesInput: HTMLTextAreaElement;
@@ -13,10 +13,11 @@ interface FormElements extends HTMLFormControlsCollection{
 const $modal = document.querySelector('dialog') as HTMLDialogElement;
 const $addNewBtn = document.querySelector('#add-new') as HTMLAnchorElement;
 const $form = document.querySelector('#modal-form') as HTMLFormElement;
-
+const $table = document.querySelector('#events-table') as HTMLTableElement;
 if (!$modal) throw new Error('no dialog found');
 if (!$addNewBtn) throw new Error('no add new button');
 if (!$form) throw new Error('no form');
+if (!$table) throw new Error('no table');
 
 $addNewBtn.addEventListener('click', () => {
   $modal.showModal();
@@ -31,18 +32,13 @@ function renderResult(item: Item): void {
   </tr>
 
   */
-  const $outerElement = document.createElement('tr');
-  const $tdElement1 = document.createElement('td');
-  const $tdElement2 = document.createElement('td');
-  const $tdElement3 = document.createElement('td');
-
-  $tdElement1.textContent = item.time;
-  $tdElement2.textContent = item.day;
-  $tdElement3.textContent = item.notes;
-
-  $outerElement.appendChild($tdElement1);
-  $outerElement.appendChild($tdElement2);
-  $outerElement.appendChild($tdElement3);
+  const newRow = $table.insertRow(-1);
+  const newCell1 = newRow.insertCell(0);
+  const newCell2 = newRow.insertCell(1);
+  const newCell3 = newRow.insertCell(2);
+  newCell1.appendChild(document.createTextNode(item.time));
+  newCell2.appendChild(document.createTextNode(item.day));
+  newCell3.appendChild(document.createTextNode(item.notes));
 }
 
 $form.addEventListener('submit', (): void => {
@@ -55,7 +51,6 @@ $form.addEventListener('submit', (): void => {
   const item = {
     time: $formElements.timeDropdown.value,
     day: $formElements.weekDropdown.value,
-    notes: $formElements.notesInput.value
-  }
-
-})
+    notes: $formElements.notesInput.value,
+  };
+});
