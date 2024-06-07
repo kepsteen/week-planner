@@ -53,4 +53,5 @@ $form.addEventListener('submit', (): void => {
     day: $formElements.weekDropdown.value,
     notes: $formElements.notesInput.value,
   };
+  renderResult(item);
 });
