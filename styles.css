@@ -61,3 +61,11 @@ th {
   color: #fff;
   border-radius: 5px;
 }
+
+#add-new {
+  margin-top: 15px;
+  background-color: grey;
+  color: white;
+  padding: 4px;
+  border-radius: 5px;
+}
