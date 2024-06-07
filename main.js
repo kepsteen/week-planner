@@ -52,7 +52,9 @@ $form.addEventListener('submit', function (event) {
         time: $formElements.timeDropdown.value,
         day: $formElements.daysOfWeek.value,
         notes: $formElements.notesInput.value,
+        itemId: eventsObject.nextEntryId,
     };
+    eventsObject.nextEntryId++;
     eventsObject.eventsArr.push(item);
     renderResult(item);
     $modal.close();
@@ -70,3 +72,9 @@ if (previousJsonData) {
     var parseJson = JSON.parse(previousJsonData);
     eventsObject = parseJson;
 }
+document.addEventListener('DOMContentLoaded', function () {
+    for (var i = 0; i < eventsObject.eventsArr.length; i++) {
+        renderResult(eventsObject.eventsArr[i]);
+    }
+});
+console.log(eventsObject);
