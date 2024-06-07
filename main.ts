@@ -37,8 +37,15 @@ function renderResult(item: Item): void {
   const newCell1 = newRow.insertCell(0);
   const newCell2 = newRow.insertCell(1);
   const newCell3 = newRow.insertCell(2);
+
+
+  const $editBtn = document.createElement('a');
+  const $deleteBtn = document.createElement('a');
+
+  $editBtn.setAttribute('class', '')
+
   newCell1.appendChild(document.createTextNode(item.time));
-  newCell2.appendChild(document.createTextNode(item.day));
+  newCell2.appendChild(document.createTextNode(item.notes));
   newCell3.appendChild(document.createTextNode(item.notes));
 }
 

@@ -1,5 +1,9 @@
+a {
+  text-decoration: none;
+}
+
 tr {
-  height: 20px;
+  height: 35px;
 }
 
 tr:nth-child(odd) {
@@ -42,4 +46,18 @@ table {
 
 th {
   background-color: white;
+}
+
+.edit-btn {
+  padding: 0.25rem 0.5rem;
+  background-color: #5779c6;
+  color: #fff;
+  border-radius: 5px;
+}
+
+.delete-btn {
+  padding: 0.25rem 0.5rem;
+  background-color: red;
+  color: #fff;
+  border-radius: 5px;
 }
