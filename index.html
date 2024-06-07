@@ -18,7 +18,8 @@
       <p>Day of Week</p>
     </div>
     <div class="row">
-      <select name="days" id="days">
+      <form action="#">
+        <select name="days" id="days">
         <option value="monday">Monday</option>
         <option value="tuesday">Tuesday</option>
         <option value="wednesday">Wednesday</option>
@@ -27,6 +28,7 @@
         <option value="saturday">Saturday</option>
         <option value="sunday">Sunday</option>
       </select>
+      </form>
     </div>
     <div class="row">
       <a href="#">Add New Event</a>
@@ -74,6 +76,42 @@
         </tbody>
       </table>
     </div>
+    <dialog>
+      <form action="#">
+        <label for="event">Time of Event:</label>
+      <select name="" id="">
+        <option value="">0100</option>
+        <option value="">0200</option>
+        <option value="">0300</option>
+        <option value="">0400</option>
+        <option value="">0500</option>
+        <option value="">0600</option>
+        <option value="">0700</option>
+        <option value="">0100</option>
+        <option value="">0100</option>
+        <option value="">0100</option>
+        <option value="">0100</option>
+        <option value="">0100</option>
+      </select>
+      <label for="daysOfWeek">Day of Week:</label>
+      <select id="daysOfWeek" name="daysOfWeek">
+            <option value="sunday">Sunday</option>
+            <option value="monday">Monday</option>
+            <option value="tuesday">Tuesday</option>
+            <option value="wednesday">Wednesday</option>
+            <option value="thursday">Thursday</option>
+            <option value="friday">Friday</option>
+            <option value="saturday">Saturday</option>
+        </select>
+      <label for="event-info">Event Information:</label>
+      <textarea name="event-info" id="event" cols="30" rows="10">
+      </textarea>
+      <div class="modal-actions">
+        <a href="#">Cancel</a>
+        <button class="submit-btn">Confirm</button>
+      </div>
+      </form>
+    </dialog>
     <script src="main.js"></script>
   </body>
 </html>
