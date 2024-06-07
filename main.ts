@@ -16,7 +16,7 @@ interface EventsObject {
   nextEntryId: number;
 }
 
-const eventsObject: EventsObject = {
+let eventsObject: EventsObject = {
   eventsArr: [],
   editing: null,
   nextEntryId: 1,
@@ -87,3 +87,13 @@ $form.addEventListener('submit', (event: Event): void => {
 $cancelbtn.addEventListener('click', () => {
   $modal.close();
 });
+
+window.addEventListener('beforeunload', (): void => {
+  const jsonData = JSON.stringify(eventsObject);
+  localStorage.setItem('jsonData-local-storage', jsonData);
+});
+const previousJsonData = localStorage.getItem('jsonData-local-storage');
+if (previousJsonData) {
+  const parseJson = JSON.parse(previousJsonData);
+  eventsObject = parseJson;
+}

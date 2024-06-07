@@ -61,3 +61,12 @@ $form.addEventListener('submit', function (event) {
 $cancelbtn.addEventListener('click', function () {
     $modal.close();
 });
+window.addEventListener('beforeunload', function () {
+    var jsonData = JSON.stringify(eventsObject);
+    localStorage.setItem('jsonData-local-storage', jsonData);
+});
+var previousJsonData = localStorage.getItem('jsonData-local-storage');
+if (previousJsonData) {
+    var parseJson = JSON.parse(previousJsonData);
+    eventsObject = parseJson;
+}
