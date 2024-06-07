@@ -1,5 +1,9 @@
+tr {
+  height: 20px;
+}
+
 tr:nth-child(odd) {
-  background-color: #333;
+  background-color: lightgray;
 }
 
 tr:nth-child(even) {
@@ -33,4 +37,9 @@ textarea {
 
 table {
   border: 3px solid pink;
+  margin-top: 20px;
+}
+
+th {
+  background-color: white;
 }
