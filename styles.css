@@ -18,3 +18,19 @@ textarea {
   text-decoration: none;
   padding: 4px;
 }
+
+.modal-actions {
+  margin-top: 10px;
+}
+
+#confirm {
+  color: white;
+  background-color: green;
+  border-radius: 5px;
+  padding: 4px;
+  border: none;
+}
+
+table {
+  border: 3px solid pink;
+}
