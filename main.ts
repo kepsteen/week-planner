@@ -2,6 +2,7 @@ interface Item {
   time: string;
   day: string;
   notes: string;
+  itemId: number;
 }
 
 interface FormElements extends HTMLFormControlsCollection {
@@ -49,9 +50,11 @@ function renderResult(item: Item): void {
   const $plannerActions = document.createElement('div');
 
   $editBtn.setAttribute('class', 'edit-btn');
+  $editBtn.setAttribute('data-itemId', item.itemId.toString());
   $editBtn.setAttribute('href', '#');
   $editBtn.textContent = 'Edit';
   $deleteBtn.setAttribute('class', 'delete-btn');
+  $deleteBtn.setAttribute('data-itemId', item.itemId.toString());
   $deleteBtn.setAttribute('href', '#');
   $deleteBtn.textContent = 'Delete';
   $plannerActions.setAttribute('class', 'planner-actions row space-evenly');
@@ -64,10 +67,6 @@ function renderResult(item: Item): void {
 }
 
 $form.addEventListener('submit', (event: Event): void => {
-  // 1. collect the values from the form with the elements property
-  // 2. call the render function with the object
-  // 3. append the render result to the table row
-
   event.preventDefault();
 
   const $formElements = $form.elements as FormElements;
@@ -79,10 +78,12 @@ $form.addEventListener('submit', (event: Event): void => {
     itemId: eventsObject.nextEntryId,
   };
 
-  eventsObject.nextEntryId++;
+  if (eventsObject.editing === null) {
+    eventsObject.nextEntryId++;
 
-  eventsObject.eventsArr.push(item);
-  renderResult(item);
+    eventsObject.eventsArr.push(item);
+    renderResult(item);
+  }
   $modal.close();
   $form.reset();
 });
@@ -95,7 +96,9 @@ window.addEventListener('beforeunload', (): void => {
   const jsonData = JSON.stringify(eventsObject);
   localStorage.setItem('jsonData-local-storage', jsonData);
 });
+
 const previousJsonData = localStorage.getItem('jsonData-local-storage');
+
 if (previousJsonData) {
   const parseJson = JSON.parse(previousJsonData);
   eventsObject = parseJson;
@@ -107,4 +110,19 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-console.log(eventsObject);
+$table.addEventListener('click', (event: Event): void => {
+  const $eventTarget = event.target as HTMLElement;
+  const $formElements = $form.elements as FormElements;
+
+  if ($eventTarget.className === 'edit-btn') {
+    for (let i = 0; i < eventsObject.eventsArr.length; i++) {
+      if (+$eventTarget.dataset.itemId === eventsObject.eventsArr[i].itemId) {
+        $formElements.timeDropdown.value = eventsObject.eventsArr[i].time;
+        $formElements.daysOfWeek.value = eventsObject.eventsArr[i].day;
+        $formElements.notesInput.value = eventsObject.eventsArr[i].notes;
+      }
+    }
+    // 1) Populate form with values from eventsObject.editing
+    $modal.showModal();
+  }
+});
