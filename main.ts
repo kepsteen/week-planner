@@ -83,9 +83,22 @@ $form.addEventListener('submit', (event: Event): void => {
 
     eventsObject.eventsArr.push(item);
     renderResult(item);
+    $modal.close();
+    $form.reset();
+  } else {
+    let indexToEdit = -1;
+    for (let i = 0; i < eventsObject.eventsArr.length; i++) {
+      if (item.itemId === eventsObject.eventsArr[i].itemId) {
+        indexToEdit = i;
+      }
+    }
+    eventsObject.eventsArr[indexToEdit] = item;
+    for (let i = 0; i < eventsObject.eventsArr.length; i++) {
+      renderResult(eventsObject.eventsArr[i]);
+      $modal.close();
+      $form.reset();
+    }
   }
-  $modal.close();
-  $form.reset();
 });
 
 $cancelbtn.addEventListener('click', () => {
@@ -113,6 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
 $table.addEventListener('click', (event: Event): void => {
   const $eventTarget = event.target as HTMLElement;
   const $formElements = $form.elements as FormElements;
+  console.log($eventTarget);
 
   if ($eventTarget.className === 'edit-btn') {
     for (let i = 0; i < eventsObject.eventsArr.length; i++) {
