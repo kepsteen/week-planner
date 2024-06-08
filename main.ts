@@ -28,19 +28,18 @@ const $addNewBtn = document.querySelector('#add-new') as HTMLAnchorElement;
 const $form = document.querySelector('#modal-form') as HTMLFormElement;
 const $table = document.querySelector('#events-table') as HTMLTableElement;
 const $cancelbtn = document.querySelector('#cancel') as HTMLAnchorElement;
+const $tableBody = document.querySelector('#tbody') as HTMLTableSectionElement;
 
 if (!$modal) throw new Error('no dialog found');
 if (!$addNewBtn) throw new Error('no add new button');
 if (!$form) throw new Error('no form');
 if (!$table) throw new Error('no table');
 if (!$cancelbtn) throw new Error('no cancel button found');
+if (!$tableBody) throw new Error('no table body found');
 
-$addNewBtn.addEventListener('click', () => {
-  $modal.showModal();
-});
-
-function renderResult(item: Item): void {
-  const newRow = $table.insertRow(1);
+function renderResult(item: Item, index: number): void {
+  const newRow = $table.insertRow(index);
+  newRow.setAttribute('data-item-id', item.itemId.toString());
   const newCell1 = newRow.insertCell(0);
   const newCell2 = newRow.insertCell(1);
   const newCell3 = newRow.insertCell(2);
@@ -50,11 +49,11 @@ function renderResult(item: Item): void {
   const $plannerActions = document.createElement('div');
 
   $editBtn.setAttribute('class', 'edit-btn');
-  $editBtn.setAttribute('data-itemId', item.itemId.toString());
+  $editBtn.setAttribute('data-item-id', item.itemId.toString());
   $editBtn.setAttribute('href', '#');
   $editBtn.textContent = 'Edit';
   $deleteBtn.setAttribute('class', 'delete-btn');
-  $deleteBtn.setAttribute('data-itemId', item.itemId.toString());
+  $deleteBtn.setAttribute('data-item-id', item.itemId.toString());
   $deleteBtn.setAttribute('href', '#');
   $deleteBtn.textContent = 'Delete';
   $plannerActions.setAttribute('class', 'planner-actions row space-evenly');
@@ -66,42 +65,64 @@ function renderResult(item: Item): void {
   newCell3.appendChild($plannerActions);
 }
 
+$addNewBtn.addEventListener('click', () => {
+  $modal.showModal();
+});
+
 $form.addEventListener('submit', (event: Event): void => {
   event.preventDefault();
 
   const $formElements = $form.elements as FormElements;
-
-  const item = {
-    time: $formElements.timeDropdown.value,
-    day: $formElements.daysOfWeek.value,
-    notes: $formElements.notesInput.value,
-    itemId: eventsObject.nextEntryId,
-  };
-
   if (eventsObject.editing === null) {
-    eventsObject.nextEntryId++;
+    const item = {
+      time: $formElements.timeDropdown.value,
+      day: $formElements.daysOfWeek.value,
+      notes: $formElements.notesInput.value,
+      itemId: eventsObject.nextEntryId,
+    };
 
+    eventsObject.nextEntryId++;
     eventsObject.eventsArr.push(item);
-    renderResult(item);
+
+    renderResult(item, 1);
+
     $modal.close();
     $form.reset();
   } else {
-    let indexToEdit = -1;
+    const item = {
+      time: $formElements.timeDropdown.value,
+      day: $formElements.daysOfWeek.value,
+      notes: $formElements.notesInput.value,
+      itemId: eventsObject.editing.itemId,
+    };
     for (let i = 0; i < eventsObject.eventsArr.length; i++) {
       if (item.itemId === eventsObject.eventsArr[i].itemId) {
-        indexToEdit = i;
+        eventsObject.eventsArr[i] = item;
+        break;
       }
     }
-    eventsObject.eventsArr[indexToEdit] = item;
-    for (let i = 0; i < eventsObject.eventsArr.length; i++) {
-      renderResult(eventsObject.eventsArr[i]);
-      $modal.close();
-      $form.reset();
+    const $tableRows = document.querySelectorAll(
+      'tbody > tr',
+    ) as NodeListOf<HTMLTableRowElement>;
+    if (!$tableRows) throw new Error('no table row node list found');
+    let indexToReplace = -1;
+    for (let i = 0; i < $tableRows.length; i++) {
+      if (+$tableRows[i].dataset.itemId === item.itemId) {
+        indexToReplace = i;
+        break;
+      }
     }
+    $tableBody.removeChild($tableRows[indexToReplace]);
+    renderResult(item, indexToReplace + 1);
+    eventsObject.editing = null;
+    $form.reset();
+    $modal.close();
+    console.log('eventsObject', eventsObject);
   }
 });
 
 $cancelbtn.addEventListener('click', () => {
+  $form.reset();
   $modal.close();
 });
 
@@ -119,7 +140,7 @@ if (previousJsonData) {
 
 document.addEventListener('DOMContentLoaded', () => {
   for (let i = 0; i < eventsObject.eventsArr.length; i++) {
-    renderResult(eventsObject.eventsArr[i]);
+    renderResult(eventsObject.eventsArr[i], 1);
   }
 });
 
@@ -134,8 +155,11 @@ $table.addEventListener('click', (event: Event): void => {
         $formElements.timeDropdown.value = eventsObject.eventsArr[i].time;
         $formElements.daysOfWeek.value = eventsObject.eventsArr[i].day;
         $formElements.notesInput.value = eventsObject.eventsArr[i].notes;
+        eventsObject.editing = eventsObject.eventsArr[i];
+        break;
       }
     }
+    console.log('eventsObject', eventsObject);
     // 1) Populate form with values from eventsObject.editing
     $modal.showModal();
   }
