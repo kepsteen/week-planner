@@ -54,6 +54,13 @@ $form.addEventListener('submit', function (event) {
     renderResult(item);
   } else {
     item.itemId = eventsObject.editing.itemId;
+    for (var i = 0; eventsObject.eventsArr.length; i++) {
+      if (item.itemId === eventsObject.eventsArr[i].itemId) {
+        eventsObject.eventsArr[i] = item;
+        eventsObject.editing = null;
+        $modal.close();
+      }
+    }
   }
   $modal.close();
   $form.reset();

@@ -80,11 +80,17 @@ $form.addEventListener('submit', (event: Event): void => {
 
   if (eventsObject.editing === null) {
     eventsObject.nextEntryId++;
-
     eventsObject.eventsArr.push(item);
     renderResult(item);
   } else {
     item.itemId = eventsObject.editing.itemId;
+    for (let i = 0; eventsObject.eventsArr.length; i++) {
+      if (item.itemId === eventsObject.eventsArr[i].itemId) {
+        eventsObject.eventsArr[i] = item;
+        eventsObject.editing = null;
+        $modal.close();
+      }
+    }
   }
   $modal.close();
   $form.reset();
