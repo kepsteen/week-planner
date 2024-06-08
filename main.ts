@@ -50,11 +50,11 @@ function renderResult(item: Item): void {
   const $plannerActions = document.createElement('div');
 
   $editBtn.setAttribute('class', 'edit-btn');
-  $editBtn.setAttribute('data-itemId', item.itemId.toString());
+  $editBtn.setAttribute('data-item-id', item.itemId.toString());
   $editBtn.setAttribute('href', '#');
   $editBtn.textContent = 'Edit';
   $deleteBtn.setAttribute('class', 'delete-btn');
-  $deleteBtn.setAttribute('data-itemId', item.itemId.toString());
+  $deleteBtn.setAttribute('data-item-id', item.itemId.toString());
   $deleteBtn.setAttribute('href', '#');
   $deleteBtn.textContent = 'Delete';
   $plannerActions.setAttribute('class', 'planner-actions row space-evenly');
@@ -83,6 +83,8 @@ $form.addEventListener('submit', (event: Event): void => {
 
     eventsObject.eventsArr.push(item);
     renderResult(item);
+  } else {
+    item.itemId = eventsObject.editing.itemId;
   }
   $modal.close();
   $form.reset();
@@ -117,12 +119,12 @@ $table.addEventListener('click', (event: Event): void => {
   if ($eventTarget.className === 'edit-btn') {
     for (let i = 0; i < eventsObject.eventsArr.length; i++) {
       if (+$eventTarget.dataset.itemId === eventsObject.eventsArr[i].itemId) {
+        eventsObject.editing = eventsObject.eventsArr[i];
         $formElements.timeDropdown.value = eventsObject.eventsArr[i].time;
         $formElements.daysOfWeek.value = eventsObject.eventsArr[i].day;
         $formElements.notesInput.value = eventsObject.eventsArr[i].notes;
       }
     }
-    // 1) Populate form with values from eventsObject.editing
     $modal.showModal();
   }
 });
