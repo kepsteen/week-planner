@@ -40,8 +40,9 @@ textarea {
 }
 
 table {
-  border: 3px solid pink;
   margin-top: 20px;
+  border: 2px solid rgb(175, 173, 173);
+  border-collapse: collapse;
 }
 
 th {
@@ -68,4 +69,8 @@ th {
   color: white;
   padding: 4px;
   border-radius: 5px;
+}
+
+td {
+  border-right: 2px solid rgb(175, 173, 173);
 }

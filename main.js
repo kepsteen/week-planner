@@ -9,12 +9,15 @@ var $form = document.querySelector('#modal-form');
 var $table = document.querySelector('#events-table');
 var $cancelbtn = document.querySelector('#cancel');
 var $tableBody = document.querySelector('#tbody');
+var $dayForm = document.querySelector('#day-form');
+var $daySelect = document.querySelector('#days');
 if (!$modal) throw new Error('no dialog found');
 if (!$addNewBtn) throw new Error('no add new button');
 if (!$form) throw new Error('no form');
 if (!$table) throw new Error('no table');
 if (!$cancelbtn) throw new Error('no cancel button found');
 if (!$tableBody) throw new Error('no table body found');
+if (!$dayForm) throw new Error('no day form found');
 function renderResult(item, index) {
   var newRow = $table.insertRow(index);
   newRow.setAttribute('data-item-id', item.itemId.toString());
@@ -108,7 +111,7 @@ document.addEventListener('DOMContentLoaded', function () {
 $table.addEventListener('click', function (event) {
   var $eventTarget = event.target;
   var $formElements = $form.elements;
-  console.log($eventTarget);
+  console.log($eventTarget.className);
   if ($eventTarget.className === 'edit-btn') {
     for (var i = 0; i < eventsObject.eventsArr.length; i++) {
       if (+$eventTarget.dataset.itemId === eventsObject.eventsArr[i].itemId) {
@@ -122,5 +125,33 @@ $table.addEventListener('click', function (event) {
     console.log('eventsObject', eventsObject);
     // 1) Populate form with values from eventsObject.editing
     $modal.showModal();
+  } else if ($eventTarget.className === 'delete-btn') {
+    var $tableRows = document.querySelectorAll('tbody > tr');
+    var indexToRemove = null;
+    for (var i = 0; i < $tableRows.length; i++) {
+      if (+$tableRows[i].dataset.itemId === +$eventTarget.dataset.itemId) {
+        indexToRemove = i;
+        break;
+      }
+    }
+    $tableBody.removeChild($tableRows[indexToRemove]);
+  }
+});
+$daySelect.addEventListener('change', function (event) {
+  console.log(eventsObject.eventsArr);
+  var dayValue = event.target.value;
+  console.log('day: ', dayValue);
+  var $insertedRows = document.querySelectorAll('tr[data-item-id]');
+  if (!$insertedRows) throw new Error(' no inserted rows found');
+  console.log('rows', $insertedRows);
+  for (var i = 0; i < $insertedRows.length; i++) {
+    $tableBody.removeChild($insertedRows[i]);
+  }
+  for (var i = 0; i < eventsObject.eventsArr.length; i++) {
+    if (eventsObject.eventsArr[i].day === dayValue) {
+      renderResult(eventsObject.eventsArr[i], 1);
+    } else if (dayValue === 'week') {
+      renderResult(eventsObject.eventsArr[i], 1);
+    }
   }
 });

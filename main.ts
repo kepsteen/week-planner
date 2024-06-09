@@ -29,6 +29,8 @@ const $form = document.querySelector('#modal-form') as HTMLFormElement;
 const $table = document.querySelector('#events-table') as HTMLTableElement;
 const $cancelbtn = document.querySelector('#cancel') as HTMLAnchorElement;
 const $tableBody = document.querySelector('#tbody') as HTMLTableSectionElement;
+const $dayForm = document.querySelector('#day-form') as HTMLFormElement;
+const $daySelect = document.querySelector('#days') as HTMLSelectElement;
 
 if (!$modal) throw new Error('no dialog found');
 if (!$addNewBtn) throw new Error('no add new button');
@@ -36,6 +38,7 @@ if (!$form) throw new Error('no form');
 if (!$table) throw new Error('no table');
 if (!$cancelbtn) throw new Error('no cancel button found');
 if (!$tableBody) throw new Error('no table body found');
+if (!$dayForm) throw new Error('no day form found');
 
 function renderResult(item: Item, index: number): void {
   const newRow = $table.insertRow(index);
@@ -147,7 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
 $table.addEventListener('click', (event: Event): void => {
   const $eventTarget = event.target as HTMLElement;
   const $formElements = $form.elements as FormElements;
-  console.log($eventTarget);
+  console.log($eventTarget.className);
 
   if ($eventTarget.className === 'edit-btn') {
     for (let i = 0; i < eventsObject.eventsArr.length; i++) {
@@ -162,5 +165,38 @@ $table.addEventListener('click', (event: Event): void => {
     console.log('eventsObject', eventsObject);
     // 1) Populate form with values from eventsObject.editing
     $modal.showModal();
+  } else if ($eventTarget.className === 'delete-btn') {
+    const $tableRows = document.querySelectorAll(
+      'tbody > tr',
+    ) as NodeListOf<HTMLTableRowElement>;
+    let indexToRemove = null;
+    for (let i = 0; i < $tableRows.length; i++) {
+      if (+$tableRows[i].dataset.itemId === +$eventTarget.dataset.itemId) {
+        indexToRemove = i;
+        break;
+      }
+    }
+    $tableBody.removeChild($tableRows[indexToRemove]);
+  }
+});
+
+$daySelect.addEventListener('change', (event: Event): void => {
+  console.log(eventsObject.eventsArr);
+  const dayValue = (event.target as HTMLSelectElement).value;
+  console.log('day: ', dayValue);
+  const $insertedRows = document.querySelectorAll(
+    'tr[data-item-id]',
+  ) as NodeListOf<HTMLTableRowElement>;
+  if (!$insertedRows) throw new Error(' no inserted rows found');
+  console.log('rows', $insertedRows);
+  for (let i = 0; i < $insertedRows.length; i++) {
+    $tableBody.removeChild($insertedRows[i]);
+  }
+  for (let i = 0; i < eventsObject.eventsArr.length; i++) {
+    if (eventsObject.eventsArr[i].day === dayValue) {
+      renderResult(eventsObject.eventsArr[i], 1);
+    } else if (dayValue === 'week') {
+      renderResult(eventsObject.eventsArr[i], 1);
+    }
   }
 });
